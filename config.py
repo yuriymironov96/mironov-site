@@ -14,6 +14,7 @@ class Config:
     USE_LOCAL = True
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    BOOTSTRAP_SERVE_LOCAL = True
 
 
     @staticmethod
@@ -22,13 +23,13 @@ class Config:
 
 
 class DevelopmentConfig(Config):
-    DEBUG = False
+    DEBUG = True
     MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
     'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
-    SQLALCHEMY_ECHO = DEBUG
+    SQLALCHEMY_ECHO = False
 
 
 class TestingConfig(Config):

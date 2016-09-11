@@ -1,0 +1,5 @@
+Dear {{ user.username }},
+Mironov Blog alerts you that someone has attempted to change your password.
+Sincerely,
+The Mironov Team
+Note: replies to this email address are not monitored.
