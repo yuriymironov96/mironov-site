@@ -5,7 +5,7 @@ from . import main
 from .forms import EditProfileForm, EditProfileAdminForm, \
     PostForm, CommentForm
 from .. import db
-from ..models import User, Role, Permission, Post, Comment
+from ..models import User, Role, Permission, Post, Comment, Tag
 from ..email import send_email
 from flask.ext.login import login_required, current_user
 from ..decorators import admin_required, permission_required
@@ -121,3 +121,16 @@ def edit(id):
         return redirect(url_for('.post', id=post.id))
     form.body.data = post.body
     return render_template('edit_post.html', form=form)
+
+@main.route('/tag/<int:id>')
+def tag_search(id):
+    tag = Tag.query.filter_by(id=id).first()
+    if tag is None:
+        flash('Invalid tag.')
+        return redirect(url_for('.index'))
+    page = request.args.get('page', 1, type=int)
+    pagination = tag.posts.paginate(page,
+        per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
+    posts = [item.Post for item in pagination.items]
+    return render_template('view_tag_res.html', tag=tag, posts=posts,
+        pagination=pagination)

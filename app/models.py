@@ -196,15 +196,23 @@ class Role(db.Model):
     def __repr__(self):
         return '<Role %r>' % self.name
 
-class Tag(db.Model):
-    __tablename__ = 'tags'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-
 class Tag_Post_Relate(db.Model):
     __tablename__ = 'tag-post'
     tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), primary_key=True)
+
+class Tag(db.Model):
+    __tablename__ = 'tags'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    posts = db.relationship('Tag_Post_Relate',
+        foreign_keys=[Tag_Post_Relate.tag_id],
+        backref=db.backref('Tag', lazy='joined'),
+        lazy='dynamic',
+        cascade='all, delete-orphan')
+
+    def __repr__(self):
+        return '<Role %r>' % self.name
 
 class Post(db.Model):
     __tablename__ = 'posts'
@@ -214,6 +222,25 @@ class Post(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
+    tags = db.relationship('Tag_Post_Relate',
+        foreign_keys=[Tag_Post_Relate.post_id],
+        backref=db.backref('Post', lazy='joined'),
+        lazy='dynamic',
+        cascade='all, delete-orphan')
+
+    def includes_tag(self, tag):
+        return self.tags.filter_by(tag_id=tag.id).first() is not None
+
+    def tagify(self, tag):
+        if not self.includes_tag(tag):
+            rel = Tag_Post_Relate(Post=self, Tag=tag)
+            db.session.add(rel)
+
+    def untagify(self, tag):
+        rel = self.tags.filter_by(tag_id=tag.id).first()
+        if rel:
+            db.session.delete(rel)
+
 
     @staticmethod
     def generate_fake(count=100):
