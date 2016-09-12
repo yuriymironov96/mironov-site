@@ -1,5 +1,6 @@
 <ul class="comments">
     <br>
+    {% set post_needed = posts[0] %}
     {% for comment in comments %}
     <li class="comment">
         <div class="comment-thumbnail">
@@ -21,14 +22,14 @@
                     {% endif %}
                 {% endif %}
             </div>
-            {% if moderate %}
+            {% if current_user.can(Permission.MODERATE_COMMENTS) %}
                 <br>
                 {% if comment.disabled %}
-                <a class="btn btn-default btn-xs" href="{{ url_for('.moderate_enable',
-                    id=comment.id, page=page) }}">Enable</a>
+                <a class="btn btn-default btn-xs" href="{{ url_for('.moderate_enable', pid=post_needed.id,
+                    cid=comment.id) }}">Enable</a>
                 {% else %}
-                <a class="btn btn-danger btn-xs" href="{{ url_for('.moderate_disable',
-                    id=comment.id, page=page) }}">Disable</a>
+                <a class="btn btn-danger btn-xs" href="{{ url_for('.moderate_disable', pid=post_needed.id,
+                    cid=comment.id) }}">Disable</a>
                 {% endif %}
             {% endif %}
         </div>

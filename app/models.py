@@ -166,7 +166,7 @@ class Permission:
     COMMENT = 0x02
     WRITE_ARTICLES = 0x04
     MODERATE_COMMENTS = 0x08
-    ADMINISTER = 0x80
+    ADMINISTER = 0xff
 
 class Role(db.Model):
     __tablename__ = 'roles'
@@ -182,7 +182,7 @@ class Role(db.Model):
             'User' : (Permission.COMMENT, True),
             'Moderator' : (Permission.COMMENT |
                             Permission.MODERATE_COMMENTS, False),
-            'Administrator' : (0xff, False)
+            'Administrator' : (Permission.ADMINISTER, False)
         }
         for r in roles:
             role = Role.query.filter_by(name=r).first()
@@ -212,7 +212,7 @@ class Tag(db.Model):
         cascade='all, delete-orphan')
 
     def __repr__(self):
-        return '<Role %r>' % self.name
+        return '<Tag %r>' % self.name
 
 class Post(db.Model):
     __tablename__ = 'posts'

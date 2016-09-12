@@ -134,3 +134,25 @@ def tag_search(id):
     posts = [item.Post for item in pagination.items]
     return render_template('view_tag_res.html', tag=tag, posts=posts,
         pagination=pagination)
+
+@main.route('/moderate/enable/<int:pid>/<int:cid>')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate_enable(pid, cid):
+    comment = Comment.query.get_or_404(cid)
+    comment.disabled = False
+    db.session.add(comment)
+    return redirect(url_for('.post', id=pid))
+#    return redirect(url_for('.moderate',
+#                            page=request.args.get('page', 1, type=int)))
+
+@main.route('/moderate/disable/<int:pid>/<int:cid>')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate_disable(pid, cid):
+    comment = Comment.query.get_or_404(cid)
+    comment.disabled = True
+    db.session.add(comment)
+    return redirect(url_for('.post', id=pid))
+#    return redirect(url_for('.moderate',
+#                            page=request.args.get('page', 1, type=int)))
