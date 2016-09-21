@@ -143,8 +143,6 @@ def moderate_enable(pid, cid):
     comment.disabled = False
     db.session.add(comment)
     return redirect(url_for('.post', id=pid))
-#    return redirect(url_for('.moderate',
-#                            page=request.args.get('page', 1, type=int)))
 
 @main.route('/moderate/disable/<int:pid>/<int:cid>')
 @login_required
@@ -154,5 +152,13 @@ def moderate_disable(pid, cid):
     comment.disabled = True
     db.session.add(comment)
     return redirect(url_for('.post', id=pid))
-#    return redirect(url_for('.moderate',
-#                            page=request.args.get('page', 1, type=int)))
+
+@main.route('/shutdown')
+def server_shutdown():
+    if not current_app.testing:
+        abort(404)
+    shutdown = request.environ.get('werkzeug.server.shutdown')
+    if not shutdown:
+        abort(500)
+    shutdown()
+    return 'Shutting down...'
