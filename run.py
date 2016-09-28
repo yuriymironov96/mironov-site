@@ -57,7 +57,7 @@ def deploy():
     from sqlalchemy import create_engine
     from sqlalchemy_utils import database_exists, create_database
     # migrate database to latest revision
-    engine = create_engine(app.config['DATABASE_URL'])
+    engine = create_engine(os.environ.get('DATABASE_URL'))
     if not database_exists(engine.url):
         create_database(engine.url)
     upgrade()
