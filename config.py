@@ -3,6 +3,13 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
+    if os.path.exists('.env'):
+        print('Importing environment from .env...')
+        for line in open('.env'):
+            var = line.strip().split('=')
+            print var
+            if len(var) == 2:
+                os.environ[var[0]] = var[1]
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     MAIL_SUBJECT_PREFIX = '[Yuriy Mironov blog]'
@@ -44,14 +51,7 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
 
-    if os.path.exists('.env'):
-        print('Importing environment from .env...')
-        for line in open('.env'):
-            var = line.strip().split('=')
-            if len(var) == 2:
-                os.environ[var[0]] = var[1]
-                
-    SSL_DISABLE = False
+    #SSL_DISABLE = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 
     @classmethod
