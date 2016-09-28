@@ -54,7 +54,12 @@ def deploy():
     """Run deployment tasks."""
     from flask.ext.migrate import upgrade
     from app.models import Role, User
+    from sqlalchemy import create_engine
+    from sqlalchemy_utils import database_exists, create_database
     # migrate database to latest revision
+    engine = create_engine(app.config['DATABASE_URL'])
+    if not database_exists(engine.url):
+        create_database(engine.url)
     upgrade()
     # create user roles
     Role.insert_roles()
