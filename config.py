@@ -41,6 +41,14 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
+
+    if os.path.exists('.env'):
+        print('Importing environment from .env...')
+        for line in open('.env'):
+            var = line.strip().split('=')
+            if len(var) == 2:
+                os.environ[var[0]] = var[1]
+                
     SSL_DISABLE = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 
