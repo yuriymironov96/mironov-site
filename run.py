@@ -60,6 +60,7 @@ def deploy():
     engine = create_engine(os.environ.get('DATABASE_URL'))
     if not database_exists(engine.url):
         create_database(engine.url)
+        db.create_all()
     upgrade()
     # create user roles
     Role.insert_roles()
