@@ -21,7 +21,7 @@ class Config:
     USE_LOCAL = True
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    BOOTSTRAP_SERVE_LOCAL = True
+    BOOTSTRAP_SERVE_LOCAL = False
     SSL_DISABLE = True
     MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 587
