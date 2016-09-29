@@ -29,7 +29,7 @@
         {% if user == current_user %}
         <a class="btn btn-default" href="{{ url_for('.edit_profile') }}">Edit Profile</a>
         <a class="btn btn-default" href="{{ url_for('auth.change_email_request') }}">Change Email</a>
-        <a class="btn btn-default" href="{{ url_for('auth.reset_password') }}">Change Password</a>
+        <a class="btn btn-default" href="{{ url_for('auth.change_password') }}">Change Password</a>
         {% endif %}
     </div>
 </div>
