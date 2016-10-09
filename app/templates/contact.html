@@ -1,6 +1,17 @@
 {% extends "base.html" %}
 {% block title %}Mironov Blog{% endblock %}
 
+{% block navbar_select %}
+<ul class="nav navbar-nav">
+    <li><a href="{{ url_for('main.index') }}">Home</a></li>
+    <li><a href="{{ url_for('main.about') }}">About</a></li>
+    <li class="active"><a href="{{ url_for('main.contact') }}">Contact</a></li>
+    {% if current_user.is_authenticated %}
+    <li><a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a></li>
+    {% endif %}
+</ul>
+{% endblock %}
+
 {% block page_content %}
 <div class="page-header">
     <h1>Feel free to contact me here.</h1>

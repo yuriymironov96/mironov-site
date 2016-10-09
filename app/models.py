@@ -143,7 +143,7 @@ class User(UserMixin, db.Model):
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
 
-    def gravatar(self, size=100, default='retro', rating='g'):
+    def gravatar(self, size=100, default='identicon', rating='g'):
         if request.is_secure:
             url = 'https://secure.gravatar.com/avatar'
         else:
@@ -214,11 +214,16 @@ class Tag(db.Model):
     def __repr__(self):
         return '<Tag %r>' % self.name
 
+    @property
+    def count_posts(self):
+        return self.posts.count()
+
 class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.Text)
     body_html = db.Column(db.Text)
+    title = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
@@ -227,6 +232,10 @@ class Post(db.Model):
         backref=db.backref('Post', lazy='joined'),
         lazy='dynamic',
         cascade='all, delete-orphan')
+
+    @property
+    def count_tags(self):
+        return self.tags.count()
 
     def includes_tag(self, tag):
         return self.tags.filter_by(tag_id=tag.id).first() is not None
@@ -251,9 +260,11 @@ class Post(db.Model):
         user_count = User.query.count()
         for i in range(count):
             u = User.query.offset(randint(0, user_count - 1)).first()
-            p = Post(body=forgery_py.lorem_ipsum.sentences(randint(1, 5)),
+            p = Post(body=forgery_py.lorem_ipsum.sentences(randint(3, 50)),
                      timestamp=forgery_py.date.date(True),
-                     author=u)
+                     author=u, title=forgery_py.lorem_ipsum.title(randint(1, 10)))
+            for x in range(0, 4):
+                p.tagify(Tag.query.filter_by(id=randint(1, 4)).first())
             db.session.add(p)
             db.session.commit()
 

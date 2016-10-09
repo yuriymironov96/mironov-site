@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 {% import "_macros.html" as macros %}
-
-{% block title %}My Blog - Post{% endblock %}
+{% block title %}My Blog - {{post_title}}{% endblock %}
 {% block page_content %}
 {% include '_posts.html' %}
 <h4 id="comments">Comments</h4>
@@ -10,6 +9,34 @@
 <div class="comment-form">
     {{ wtf.quick_form(form) }}
 </div>
+<div class="well">
+
+    <h4>Leave a comment</h4>
+
+    <form role="form" class="clearfix">
+
+        <div class="col-md-6 form-group">
+            <label class="sr-only" for="name">Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Name">
+        </div>
+
+        <div class="col-md-6 form-group">
+            <label class="sr-only" for="email">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Email">
+        </div>
+
+        <div class="col-md-12 form-group">
+            <label class="sr-only" for="email">Comment</label>
+            <textarea class="form-control" id="comment" placeholder="Comment"></textarea>
+        </div>
+
+        <div class="col-md-12 form-group text-right">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+
+    </form>
+</div>
+<hr>
 {% endif %}
 {% include '_comments.html' %}
 {% if pagination %}

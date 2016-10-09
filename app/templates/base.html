@@ -6,10 +6,11 @@
 {{ super() }}
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 {% endblock %}
 
 {% block navbar %}
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+<div class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -21,6 +22,7 @@
             <a class="navbar-brand" href="{{ url_for('main.index') }}">Mironov Blog</a>
         </div>
         <div class="navbar-collapse collapse">
+            {% block navbar_select %}
             <ul class="nav navbar-nav">
                 <li><a href="{{ url_for('main.index') }}">Home</a></li>
                 <li><a href="{{ url_for('main.about') }}">About</a></li>
@@ -29,6 +31,7 @@
                 <li><a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a></li>
                 {% endif %}
             </ul>
+            {% endblock %}
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}
                 <li class="dropdown">
@@ -47,23 +50,84 @@
         </div>
     </div>
 </div>
-<br>
-<br>
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container main-container">
     {% for message in get_flashed_messages() %}
     <div class="alert alert-warning">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         {{ message }}
     </div>
     {% endfor %}
-    <br>
-    <br>
-    <br>
+    <div class="row">
+        <div class="col-md-8">
     {% block page_content %}{% endblock %}
-</div>
+        </div>
+        <div class="col-md-4 widget">
+            <!--<div class="affix">-->
+            <!-- Subscribe to my feed widget -->
+            <div class="well text-center">
+                <p class="lead">
+                    Don't want to miss updates? Please click the button below!
+                </p>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg" role="button">Join us!</a>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                  <h4 class="panel-title pull-left" style="padding-top: 7.5px;">Tags: </h4>
+                  <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#myModal">View all...</button>
+                </div>
+                <ul class="list-group">
+                    {% for tag in Tag.query.limit(5) %}
+                    <li class="list-group-item"><a href="{{ url_for('main.tag_search', id=tag.id)}}" class="test-right">{{tag.name}}</a> : <span class="badge pull-right" style="background-color:#337ab7;">{{tag.posts.count()}}</span></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Tags available:</h4>
+                  </div>
+                  <div class="modal-body">
+                      <ul class="list-group">
+                          {% for tag in Tag.query.all() %}
+                          <li class="list-group-item"><a href="{{ url_for('main.tag_search', id=tag.id)}}" class="test-right">{{tag.name}}</a> : <span class="badge pull-right" style="background-color:#337ab7;">{{tag.posts.count()}}</span></li>
+                          {% endfor %}
+                      </ul>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Recent Comments</h4>
+                </div>
+                <ul class="list-group">
+                    {% for comment in Comment.query.order_by(Comment.timestamp.desc()).limit(4)%}
+                    <li class="list-group-item"><a href="{{ url_for('main.post', id=comment.post.id) }}">{{ comment.body_html }}</a> - <a href="{{ url_for('main.user', username=comment.author.username) }}"><em>{{comment.author.username}}</em></a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        <!--</div>-->
+        </div>
+    </div>
+<footer>
+    <hr/>
+    <div class="container">
+        <p class="text-center">Copyright © Yuriy Mironov 2016. All rights reserved.</p>
+    </div>
+</footer>
 {% endblock %}
 
 {% block scripts %}

@@ -3,20 +3,20 @@
 }
 .profile-header {
     min-height: 260px;
-    margin-left: 280px;
+    /*margin-left: 280px;*/
 }
 ul.posts {
     list-style-type: none;
     padding: 0px;
     margin: 16px 0px 0px 0px;
-    border-top: 1px solid #e0e0e0;
+    /*border-top: 1px solid #e0e0e0;*/
 }
 ul.posts li.post {
     padding: 8px;
-    border-bottom: 1px solid #e0e0e0;
+    /*border-bottom: 1px solid #e0e0e0;*/
 }
 ul.posts li.post:hover {
-    background-color: #f0f0f0;
+    /*background-color: #f0f0f0;*/
 }
 div.post-date {
     float: right;
@@ -31,3 +31,28 @@ div.post-content {
     margin-left: 48px;
     min-height: 48px;
 }
+ul.comments {
+   list-style-type: none;
+}
+
+footer {
+    margin: 10px 0;
+}
+
+.main-container {
+    margin-top: 70px;
+}
+
+@media (min-width: 768px) { /* tablets and up */
+    .group2 {
+        text-align: right;
+    }
+}
+
+.widget {
+    /*position: absolute;*/
+}
+/*
+.tag-button {
+    margin-top: 5px;
+}*/
