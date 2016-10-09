@@ -83,7 +83,7 @@
                   {% endif %}
                 </div>
                 <ul class="list-group">
-                    {% for tag in Tag.query.limit(5) %}
+                    {% for tag in Tag.query.limit(4) %}
                     <li class="list-group-item"><a href="{{ url_for('main.tag_search', id=tag.id)}}" class="test-right">{{tag.name}}</a> : <span class="badge pull-right" style="background-color:#337ab7;">{{tag.posts.count()}}</span></li>
                     {% endfor %}
                 </ul>
