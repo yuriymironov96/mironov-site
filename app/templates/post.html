@@ -6,16 +6,13 @@
 {% include '_posts.html' %}
 <h4 id="comments">Comments</h4>
 {% if current_user.can(Permission.COMMENT) %}
-<div class="comment-form">
-    {{ wtf.quick_form(form) }}
-</div>
-<div class="well">
+<div class="well comment-form">
 
     <h4>Leave a comment</h4>
 
-    <form role="form" class="clearfix">
+    <form role="form" action="" method="post" class="clearfix">
 
-        <div class="col-md-6 form-group">
+        <!--<div class="col-md-6 form-group">
             <label class="sr-only" for="name">Name</label>
             <input type="text" class="form-control" id="name" placeholder="Name">
         </div>
@@ -23,15 +20,10 @@
         <div class="col-md-6 form-group">
             <label class="sr-only" for="email">Email</label>
             <input type="email" class="form-control" id="email" placeholder="Email">
-        </div>
-
-        <div class="col-md-12 form-group">
-            <label class="sr-only" for="email">Comment</label>
-            <textarea class="form-control" id="comment" placeholder="Comment"></textarea>
-        </div>
+        </div> -->
 
         <div class="col-md-12 form-group text-right">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            {{ wtf.quick_form(form, button_map={'submit':'primary'}) }}
         </div>
 
     </form>

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+
+{% block title %}My blog - Add tag{% endblock %}
+
+{% block page_content %}
+<br>
+<div class="post-tabs">
+    <br>
+    {{ wtf.quick_form(form) }}
+</div>
+{% endblock %}

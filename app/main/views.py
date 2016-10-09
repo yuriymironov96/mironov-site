@@ -3,9 +3,10 @@ from flask import render_template, session, redirect, url_for, current_app, \
     request, abort, flash, make_response
 from . import main
 from .forms import EditProfileForm, EditProfileAdminForm, \
-    PostForm, CommentForm
+    PostForm, CommentForm, TagForm
 from .. import db
-from ..models import User, Role, Permission, Post, Comment, Tag
+from ..models import User, Role, Permission, Post, Comment, Tag, \
+    Tag_Post_Relate
 from ..email import send_email
 from flask.ext.login import login_required, current_user
 from ..decorators import admin_required, permission_required
@@ -17,6 +18,10 @@ def index():
         form.validate_on_submit():
         post = Post(title=form.title.data, body=form.body.data,
             author=current_user._get_current_object())
+        db.session.add(post)
+        db.session.commit()
+        for tag in form.tags.data:
+            post.tagify(Tag.query.filter_by(id=tag).first())
         db.session.add(post)
         return redirect(url_for('.index'))
     page = request.args.get('page', 1, type=int)
@@ -122,6 +127,16 @@ def edit(id):
         return redirect(url_for('.post', id=post.id))
     form.body.data = post.body
     return render_template('edit_post.html', form=form)
+
+@main.route('/tag/add', methods=['GET', 'POST'])
+def tag_add():
+    form = TagForm()
+    if form.validate_on_submit():
+        t = Tag(name=form.title.data)
+        db.session.add(t)
+        return redirect(url_for('.tag_add'))
+    return render_template('add_tag.html', form=form)
+
 
 @main.route('/tag/<int:id>')
 def tag_search(id):
