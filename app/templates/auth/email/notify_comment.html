@@ -1,0 +1,8 @@
+<p><b>Warning!</b></p>
+<p>User <b>{{ user.username }}</b> has recently commented on <a href="{{url_for('main.post', id=post.id, _external=True)}}">this post</a>.</p>
+<p>The text was: <br>{{comment.body}}</p>
+<p>He can be contacted via his email {{user.email}}.</p>
+<p>To check out the user you can view his account: <a href="{{ url_for('main.user', username=user.username, _external=True) }}">{{user.username}}</a>.</p>
+<p>Sincerely,</p>
+<p>The Mironov Team</p>
+<p><small>Note: replies to this email address are not monitored.</small></p>

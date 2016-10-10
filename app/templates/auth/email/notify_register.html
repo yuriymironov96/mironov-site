@@ -1,0 +1,9 @@
+<p><b>Warning!</b></p>
+<p>New user <b>{{ user.username }}</b> has recently confirmed his account.</p>
+<p>He can be contacted via his email {{user.email}}.</p>
+<p>To check out the user you can view his account: <a href="{{ url_for('main.user', username=user.username, _external=True) }}">{{user.username}}</a>.</p>
+<p>Alternatively, you can paste the following link in your browser's address bar:</p>
+<p>{{ url_for('main.user', username=user.username, _external=True) }}</p>
+<p>Sincerely,</p>
+<p>The Mironov Team</p>
+<p><small>Note: replies to this email address are not monitored.</small></p>

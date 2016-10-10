@@ -1,0 +1,8 @@
+Warning!
+New user {{ user.username }} has recently confirmed his account.
+He can be contacted via his email {{user.email}}.
+Alternatively, you can paste the following link in your browser's address bar:
+{{ url_for('main.user', username=user.username, _external=True) }}
+Sincerely,
+The Mironov Team
+Note: replies to this email address are not monitored.

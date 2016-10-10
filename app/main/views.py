@@ -98,6 +98,7 @@ def post(id):
     if form.validate_on_submit():
         comment = Comment(body=form.body.data, post=post, author=current_user._get_current_object())
         db.session.add(comment)
+        send_email(current_app.config['ADMIN'], 'User has commented on your post!', 'auth/email/notify_comment', user=current_user._get_current_object(), comment=comment, post=post)
         flash('Your comment has been published')
         return redirect(url_for('.post', id=post.id, page=-1))
     page = request.args.get('page', 1, type=int)

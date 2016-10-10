@@ -1,0 +1,9 @@
+Warning!
+User {{ user.username }} has recently commented on {{url_for('main.post', id=post.id, _external=True)}} this post.
+The text was:
+{{comment.body}}
+He can be contacted via his email {{user.email}}.
+To check out the user you can view his account: {{ url_for('main.user', username=user.username, _external=True) }}
+Sincerely,
+The Mironov Team
+Note: replies to this email address are not monitored.
