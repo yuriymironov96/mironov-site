@@ -65,13 +65,11 @@
                     {% else %}{{post.body}}{%endif%}
                 {% endif %}
             </div>
-            {% if posts.__len__() > 1 %}
             <p class="text-right lead">
                 <a href="{{ url_for('.post', id=post.id) }}" class="text-right">
                     continue reading...
                 </a>
             </p>
-            {% endif %}
         </article>
     </li>
     {% endfor %}

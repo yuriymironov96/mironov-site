@@ -83,7 +83,7 @@
                   {% endif %}
                 </div>
                 <ul class="list-group">
-                    {% for tag in Tag.ordered_list()[:5] %}
+                    {% for tag in Tag.ordered_list()[:4] %}
                     <li class="list-group-item"><a href="{{ url_for('main.tag_search', id=tag[2])}}" class="test-right">{{tag[0]}}</a> :  <span class="badge pull-right" style="background-color:#337ab7;">{{tag[1]}}</span></li>
                     {% endfor %}
                 </ul>
