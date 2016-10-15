@@ -65,11 +65,13 @@
                     {% else %}{{post.body}}{%endif%}
                 {% endif %}
             </div>
+	    {% if not single_post %}
             <p class="text-right lead">
                 <a href="{{ url_for('.post', id=post.id) }}" class="text-right">
                     continue reading...
                 </a>
             </p>
+	    {% endif %}
         </article>
     </li>
     {% endfor %}
