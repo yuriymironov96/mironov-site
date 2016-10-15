@@ -15,7 +15,21 @@
 {% endblock %}
 
 {% block page_content %}
-<div class="page-header">
-    <h1>This page is about me.</h1>
+<div class="well">
+    <h1>About Me</h1>
+    <div class="row">
+        <div class="col-md-3 col-sm-3">
+            <img class="img-thumbnail img-responsive photo" src="{{ url_for('static', filename='photo.jpg') }}" />
+        </div>
+        <div class="col-md-9 col-sm-9">
+            <p>Hi there! My name is Yuriy Mironov and I welcome you at my self-developed blog. I am from Kiev, Ukraine, and I am a web-developer. I enjoy writing Python and using its frameworks like Django and Flask to build smooth backend. I am also okay with some frontend technologies, like Angular.js.</p>
+
+            <p>This blog is developed using Flask on a backend and Bootstrap on a client-side. You can find its source code on my <a href="https://github.com/yuriymironov96/mironov-site" target="_blank">GitHub repository</a>. The majority of topics covered on this blog are Unix system administration, Python from standpoint of web, and problem solutions that I wasn't able to find in the Internet.</p>
+            <p class="social-buttons text-center">
+                <a type="button" class="btn btn-primary btn-lg" href="https://github.com/yuriymironov96" target="_blank">Visit my GitHub page</a>
+                <a type="button" class="btn btn-default btn-lg" href="{{ url_for('main.contact')}}" target="_blank">Contact me</a>
+            </p>
+        </div>
+    </div>
 </div>
 {% endblock %}

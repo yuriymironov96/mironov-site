@@ -1,36 +1,31 @@
-<ul id="comments" class="comments">
+<ul id="comments" class="comments list-group">
+    <li class="list-group-item">
+        <h4>Comments:</h4>
+    </li>
     {% set post_needed = posts[0] %}
     {% for comment in comments %}
-    <li class="comment clearfix">
-        <div class="comment-thumbnail">
+    <li class="comment clearfix list-group-item">
+        <div class="comment-thumbnail column">
             <a href="{{ url_for('.user', username=comment.author.username) }}">
+                <img class="img-rounded profile-thumbnail" src="{{ comment.author.gravatar(size=60) }}" align="left" float="left" width="60" height="60">
             </a>
         </div>
+        <div class="comment-body">
         <div class="clearfix">
             <h4 class="pull-left comment-author"><a href="{{ url_for('.user', username=comment.author.username) }}">{{ comment.author.username }}</a></h4>
             <p class="pull-right comment-date">{{ moment(comment.timestamp).calendar() }}</p>
         </div>
-        <div class="comment-body">
-            {% if comment.disabled %}
-            <p><i>This comment has been disabled by a moderator.</i><p>
-            {% endif %}
-            {% if moderate or not comment.disabled %}
-                {% if comment.body_html %}
-                    {{ comment.body_html | safe }}
-                {% else %}
-                    {{ comment.body }}
-                {% endif %}
+
+            {% if comment.body_html %}
+                {{ comment.body_html | safe }}
+            {% else %}
+                {{ comment.body }}
             {% endif %}
         </div>
         {% if current_user.can(Permission.MODERATE_COMMENTS) %}
             <br>
-            {% if comment.disabled %}
-            <a class="btn btn-default btn-xs" href="{{ url_for('.moderate_enable', pid=post_needed.id,
-                cid=comment.id) }}">Enable</a>
-            {% else %}
             <a class="btn btn-danger btn-xs" href="{{ url_for('.moderate_disable', pid=post_needed.id,
-                cid=comment.id) }}">Disable</a>
-            {% endif %}
+                cid=comment.id) }}">Delete</a>
         {% endif %}
     </li>
     {% endfor %}

@@ -6,25 +6,32 @@
                 {% if single_post != True %}
                     <h2><a href="{{ url_for('.post', id=post.id) }}">{{ post.title }}</a>
                         <small>by <a href="{{ url_for('.user', username=post.author.username) }}">{{ post.author.username }}</a>
-                            {% if current_user == post.author %}
-                            <a href="{{ url_for('.edit', id=post.id) }}">
-                                <span class="label label-primary">Edit</span>
-                            </a>
-                            {% elif current_user.is_administrator() %}
+                            {% if current_user.is_administrator() %}
                             <a href="{{ url_for('.edit', id=post.id) }}">
                                 <span class="label label-danger">Edit [Admin]</span>
+                            </a>
+                            <a href="{{ url_for('.delete', id=post.id) }}">
+                            <span class="label label-danger">Delete [Admin]</span>
+                            </a>
+                            {% elif current_user == post.author %}
+                            <a href="{{ url_for('.edit', id=post.id) }}">
+                                <span class="label label-primary">Edit</span>
                             </a>
                         {% endif %}</small></h2>
                 {% else %}
                     <h2>{{ post.title }} <small>by <a href="{{ url_for('.user', username=post.author.username) }}">{{ post.author.username }}</a>
-                        {% if current_user == post.author %}
+                        {% if current_user.is_administrator() %}
+                        <a href="{{ url_for('.edit', id=post.id) }}">
+                            <span class="label label-danger">Edit [Admin]</span>
+                        </a>
+                        <a href="{{ url_for('.delete', id=post.id) }}">
+                        <span class="label label-danger">Delete [Admin]</span>
+                        </a>
+                        {% elif current_user == post.author %}
                         <a href="{{ url_for('.edit', id=post.id) }}">
                         <span class="label label-primary">Edit</span>
                     </a>
-                    {% elif current_user.is_administrator() %}
-                    <a href="{{ url_for('.edit', id=post.id) }}">
-                        <span class="label label-danger">Edit [Admin]</span>
-                    </a>
+
                     </small>
                 {% endif %}</h2>
                 {% endif %}
@@ -46,10 +53,16 @@
             </div>
             <hr>
             <div class="post-body lead">
-                {% if post.body_html %}
-                    {{ post.body_html | safe }}
+                {% if single_post %}
+                    {% if post.body_html %}
+                        {{ post.body_html | safe }}
+                    {% else %}
+                        {{ post.body }}
+                    {% endif %}
                 {% else %}
-                    {{ post.body }}
+                {% if post.body |length > 500 %}
+                    {{ post.body[:500] }}...
+                    {% else %}{{post.body}}{%endif%}
                 {% endif %}
             </div>
             {% if posts.__len__() > 1 %}

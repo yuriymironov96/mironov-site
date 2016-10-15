@@ -14,13 +14,11 @@
 {% endblock %}
 
 {% block page_content %}
-<div class="page-header">
     <div class="profile-header">
         <h1>{{ user.username }}</h1>
-        <div class="content">
-            <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=256) }}">
-        </div>
-        <div class="content">
+        <div class="thumbnail right-caption">
+            <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=156) }}" align="left" float="left" width="156" height="156">
+            <div class="caption">
             {% if user.name or user.location %}
             <p>
                 {% if user.name %}{{ user.name }}<br>{% endif %}
@@ -45,7 +43,8 @@
             <a class="btn btn-default" href="{{ url_for('auth.change_email_request') }}">Change Email</a>
             <a class="btn btn-default" href="{{ url_for('auth.change_password') }}">Change Password</a>
             {% endif %}
+            </div>
         </div>
-    </div>
 </div>
+
 {% endblock %}

@@ -1,5 +1,5 @@
 .profile-thumbnail {
-    position: absolute;
+/*    position: absolute;*/
 }
 .profile-header {
     min-height: 260px;
@@ -56,10 +56,54 @@ footer {
     border-right: 1px solid #FFF;
 }
 
-.widget {
-    /*position: absolute;*/
-}
-/*
 .tag-button {
     margin-top: 5px;
-}*/
+}
+
+body {
+    background-image: url(bg.jpg);
+    background-attachment: fixed;
+}
+
+user-data {
+    margin-left: 256px;
+}
+
+
+.thumbnail.right-caption > img {
+    float: left;
+    margin-right: 9px;
+}
+
+.thumbnail.right-caption {
+    float: left;
+    width: 100%;
+}
+
+.thumbnail.right-caption > .caption {
+    padding: 4px;
+}
+
+.comment-thumbnail {
+    width: 60px;
+    position: absolute;
+}
+
+.comment-body {
+    margin-left: 70px;
+}
+
+.social-icons {
+    list-style-type: none;
+    list-style: none;
+    position: center;
+}
+
+.icon {
+    width: 50px;
+    height: 50px;
+}
+
+li.icon {
+    display: inline;
+}

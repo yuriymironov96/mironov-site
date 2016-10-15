@@ -198,8 +198,9 @@ class Role(db.Model):
 
 class Tag_Post_Relate(db.Model):
     __tablename__ = 'tag-post'
-    tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key=True)
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), primary_key=True)
+    tag_id = db.Column(db.Integer, db.ForeignKey('tags.id', ondelete='CASCADE'), primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id', ondelete='CASCADE'), primary_key=True)
+
 
 class Tag(db.Model):
     __tablename__ = 'tags'
@@ -214,6 +215,14 @@ class Tag(db.Model):
     def __repr__(self):
         return '<Tag %r>' % self.name
 
+    @staticmethod
+    def ordered_list():
+        l = []
+        for tag in Tag.query.all():
+            l.append((tag.name, tag.count_posts, tag.id))
+        return sorted(l, key=lambda l:l[1], reverse=True)
+
+
     @property
     def count_posts(self):
         return self.posts.count()
@@ -226,7 +235,7 @@ class Post(db.Model):
     title = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    comments = db.relationship('Comment', backref='post', lazy='dynamic')
+    comments = db.relationship('Comment', backref='post', lazy='dynamic', cascade='all, delete-orphan')
     tags = db.relationship('Tag_Post_Relate',
         foreign_keys=[Tag_Post_Relate.post_id],
         backref=db.backref('Post', lazy='joined'),
@@ -287,7 +296,7 @@ class Comment(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     disabled = db.Column(db.Boolean)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id', ondelete='CASCADE'))
 
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):

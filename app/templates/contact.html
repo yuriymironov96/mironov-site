@@ -13,7 +13,21 @@
 {% endblock %}
 
 {% block page_content %}
-<div class="page-header">
-    <h1>Feel free to contact me here.</h1>
+<div class="form-horizontal well">
+
+    <h1>Contact Me</h1>
+
+    <p class="lead">
+        Do you have any question? The easiest way to do it is to write me an email. Also I can be contacted via LinkedIn or comment section of my blog. Have fun!
+    </p>
+    <div class="row span10 offset">
+        <ul class="social-icons fa-ul">
+            <li class="icon fa-li"><a href="{{ ''.join(['http://', 'yuriymironov96@gmail.com']) }}"><img class="icon" src="{{url_for('static', filename='email.png')}}"/></a></li>
+            <li class="icon fa-li"><a href="{{ ''.join(['live:', 'yuriymironov96']) }}"><img class="icon" src="{{url_for('static', filename='skype.png')}}"/></a></li>
+            <li class="icon fa-li"><a href="https://github.com/yuriymironov96" target="_blank"><img class="icon" src="{{url_for('static', filename='github.png')}}"/></a></li>
+            <li class="icon fa-li"><a href="https://ua.linkedin.com/in/yuriymironov96" target="_blank"><img class="icon" src="{{url_for('static', filename='linkedin.png')}}"/></a></li>
+        </ul>
+    </div>
 </div>
+
 {% endblock %}

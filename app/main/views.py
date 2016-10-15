@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import render_template, session, redirect, url_for, current_app, \
     request, abort, flash, make_response
 from . import main
@@ -96,6 +96,13 @@ def post(id):
     post = Post.query.get_or_404(id)
     form = CommentForm()
     if form.validate_on_submit():
+        """last_comment = post.comments.filter_by(author_id=current_user.id).first()
+        if last_comment:
+            print '_________%s' % last_comment.body
+            print '_________%s' % User.query.filter_by(id=last_comment.author_id).first()
+        if last_comment and datetime.utcnow() - timedelta(minutes=20) < last_comment.timestamp and last_comment.author_id == current_user.id:
+            flash('Please wait a bit before you are able to write new comment')
+            return redirect(url_for('.post', id=post.id, page=-1))"""
         comment = Comment(body=form.body.data, post=post, author=current_user._get_current_object())
         db.session.add(comment)
         send_email(current_app.config['ADMIN'], 'User has commented on your post!', 'auth/email/notify_comment', user=current_user._get_current_object(), comment=comment, post=post)
@@ -105,7 +112,7 @@ def post(id):
     if page == -1:
         page = (post.comments.count() - 1) / \
                 current_app.config['COMMENTS_PER_PAGE'] + 1
-    pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
+    pagination = post.comments.order_by(Comment.timestamp).paginate(
         page, per_page=current_app.config['COMMENTS_PER_PAGE'],
         error_out=False)
     comments = pagination.items
@@ -129,7 +136,16 @@ def edit(id):
     form.body.data = post.body
     return render_template('edit_post.html', form=form)
 
+@main.route('/delete/<int:id>')
+@admin_required
+def delete(id):
+    Post.query.filter_by(id=id).delete()
+    flash("The post has been deleted")
+    return redirect(url_for('main.index'))
+
+
 @main.route('/tag/add', methods=['GET', 'POST'])
+@admin_required
 def tag_add():
     form = TagForm()
     if form.validate_on_submit():
@@ -152,22 +168,12 @@ def tag_search(id):
     return render_template('view_tag_res.html', tag=tag, posts=posts,
         pagination=pagination)
 
-@main.route('/moderate/enable/<int:pid>/<int:cid>')
-@login_required
-@permission_required(Permission.MODERATE_COMMENTS)
-def moderate_enable(pid, cid):
-    comment = Comment.query.get_or_404(cid)
-    comment.disabled = False
-    db.session.add(comment)
-    return redirect(url_for('.post', id=pid))
-
 @main.route('/moderate/disable/<int:pid>/<int:cid>')
 @login_required
 @permission_required(Permission.MODERATE_COMMENTS)
 def moderate_disable(pid, cid):
-    comment = Comment.query.get_or_404(cid)
-    comment.disabled = True
-    db.session.add(comment)
+    Comment.query.filter_by(id=cid).delete()
+    flash('The comment has been deleted', category='message')
     return redirect(url_for('.post', id=pid))
 
 @main.route('/shutdown')

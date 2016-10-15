@@ -61,10 +61,10 @@
     </div>
     {% endfor %}
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8 col-xs-12">
     {% block page_content %}{% endblock %}
         </div>
-        <div class="col-md-4 widget">
+        <div class="col-md-4 col-xs-12 widget">
             <!--<div class="affix">-->
             <!-- Subscribe to my feed widget -->
             {% if current_user.is_anonymous %}
@@ -83,8 +83,8 @@
                   {% endif %}
                 </div>
                 <ul class="list-group">
-                    {% for tag in Tag.query.limit(4) %}
-                    <li class="list-group-item"><a href="{{ url_for('main.tag_search', id=tag.id)}}" class="test-right">{{tag.name}}</a> : <span class="badge pull-right" style="background-color:#337ab7;">{{tag.posts.count()}}</span></li>
+                    {% for tag in Tag.ordered_list()[:5] %}
+                    <li class="list-group-item"><a href="{{ url_for('main.tag_search', id=tag[2])}}" class="test-right">{{tag[0]}}</a> :  <span class="badge pull-right" style="background-color:#337ab7;">{{tag[1]}}</span></li>
                     {% endfor %}
                 </ul>
                 <div class="panel-footer clearfix">
@@ -103,8 +103,8 @@
                   </div>
                   <div class="modal-body">
                       <ul class="list-group">
-                          {% for tag in Tag.query.all() %}
-                          <li class="list-group-item"><a href="{{ url_for('main.tag_search', id=tag.id)}}" class="test-right">{{tag.name}}</a> : <span class="badge pull-right" style="background-color:#337ab7;">{{tag.posts.count()}}</span></li>
+                          {% for tag in Tag.ordered_list() %}
+                          <li class="list-group-item"><a href="{{ url_for('main.tag_search', id=tag[2])}}" class="test-right">{{tag[0]}}</a> : <span class="badge pull-right" style="background-color:#337ab7;">{{tag[1]}}</span></li>
                           {% endfor %}
                       </ul>
                   </div>
@@ -121,7 +121,9 @@
                 </div>
                 <ul class="list-group">
                     {% for comment in Comment.query.order_by(Comment.timestamp.desc()).limit(4)%}
-                    <li class="list-group-item"><a href="{{ url_for('main.post', id=comment.post.id) }}">{{ comment.body_html }}</a> - <a href="{{ url_for('main.user', username=comment.author.username) }}"><em>{{comment.author.username}}</em></a></li>
+                    <li class="list-group-item"><a href="{{ url_for('main.post', id=comment.post.id) }}">{% if comment.body_html |length > 20%}
+                        {{ comment.body_html[:20] }}...
+                        {% else %}{{comment.body_html}}{%endif%}</a> - <a href="{{ url_for('main.user', username=comment.author.username) }}"><em>{{comment.author.username}}</em></a></li>
                     {% endfor %}
                 </ul>
             </div>
