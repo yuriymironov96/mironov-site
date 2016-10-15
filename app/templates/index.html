@@ -21,7 +21,7 @@
 </div>
 
 {% if current_user.can(Permission.WRITE_ARTICLES) %}
-<form class="well">
+<form class="well" method="post">
     {{ wtf.quick_form(form) }}
 </form>
 {% endif %}
