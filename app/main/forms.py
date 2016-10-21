@@ -48,6 +48,9 @@ class PostForm(Form):
     submit = SubmitField('Submit')
 
     def __init__(self, *args, **kwargs):
+        """
+        Generate the tag list for the post form.
+        """
         super(PostForm, self).__init__(*args, **kwargs)
         self.tags.choices = [(tag.id, tag.name)
         for tag in Tag.query.order_by(Tag.name).all()]

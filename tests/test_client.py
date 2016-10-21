@@ -6,6 +6,9 @@ from app.models import User, Role
 class FlaskClientTestCase(unittest.TestCase):
 
     def setUp(self):
+        """
+        A sequence of operations needed to start basic tests.
+        """
         self.app = create_app('testing')
         self.app_context = self.app.app_context()
         self.app_context.push()
@@ -14,6 +17,9 @@ class FlaskClientTestCase(unittest.TestCase):
         self.client = self.app.test_client(use_cookies=True)
 
     def tearDown(self):
+        """
+        A sequence of operations needed to end basic tests.
+        """
         db.session.remove()
         db.drop_all()
         self.app_context.pop()

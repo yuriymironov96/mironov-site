@@ -96,13 +96,6 @@ def post(id):
     post = Post.query.get_or_404(id)
     form = CommentForm()
     if form.validate_on_submit():
-        """last_comment = post.comments.filter_by(author_id=current_user.id).first()
-        if last_comment:
-            print '_________%s' % last_comment.body
-            print '_________%s' % User.query.filter_by(id=last_comment.author_id).first()
-        if last_comment and datetime.utcnow() - timedelta(minutes=20) < last_comment.timestamp and last_comment.author_id == current_user.id:
-            flash('Please wait a bit before you are able to write new comment')
-            return redirect(url_for('.post', id=post.id, page=-1))"""
         comment = Comment(body=form.body.data, post=post, author=current_user._get_current_object())
         db.session.add(comment)
         send_email(current_app.config['ADMIN'], 'User has commented on your post!', 'auth/email/notify_comment', user=current_user._get_current_object(), comment=comment, post=post)

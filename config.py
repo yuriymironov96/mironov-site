@@ -3,13 +3,10 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
-    if os.path.exists('.env'):
-        print('Importing environment from .env...')
-        for line in open('.env'):
-            var = line.strip().split('=')
-            print var
-            if len(var) == 2:
-                os.environ[var[0]] = var[1]
+    """
+    A basic configuration of the application that includes email smpt settings
+    and major environmental variables import.
+    """
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     MAIL_SUBJECT_PREFIX = '[Yuriy Mironov blog]'
@@ -50,7 +47,10 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
-
+    """
+    ProductionConfig and its derivatives include traceback submits
+    to ADMIN email and environmental variables from .env file.
+    """
     #SSL_DISABLE = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 

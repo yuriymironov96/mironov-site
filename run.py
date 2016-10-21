@@ -4,6 +4,7 @@ from flask.exthook import ExtDeprecationWarning
 
 warnings.simplefilter('ignore', ExtDeprecationWarning)
 
+#coverage tests
 import os
 COV = None
 if os.environ.get('FLASK_COVERAGE'):
@@ -22,6 +23,9 @@ migrate = Migrate(app, db)
 
 
 def make_shell_context():
+    """
+    Shell context settings: add new entities to work with them via terminal.
+    """
     return dict(app=app, db=db, User=User, Role=Role, Post=Post,
                 Comment=Comment, Tag=Tag, TPR=Tag_Post_Relate)
 manager.add_command("shell", Shell(make_context=make_shell_context))
@@ -30,7 +34,9 @@ manager.add_command('db', MigrateCommand)
 
 @manager.command
 def test(coverage=False):
-    """Run the unit tests."""
+    """
+    Run the unit tests. They require declared config variables.
+    """
     if coverage and not os.environ.get('FLASK_COVERAGE'):
         import sys
         os.environ['FLASK_COVERAGE'] = '1'

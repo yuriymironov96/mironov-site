@@ -42,6 +42,9 @@ def register():
 @auth.route('/confirm/<token>')
 @login_required
 def confirm(token):
+    """
+    Confirm user by submitting token from the email to the server.
+    """
     if current_user.confirmed:
         return redirect(url_for('main.index'))
     if current_user.confirm(token):
@@ -76,6 +79,10 @@ def resend_confirmation():
 @auth.route('/change-password', methods=['GET', 'POST'])
 @login_required
 def change_password():
+    """
+    Change password form. The changes and change attemps will be reported
+    to the user by his email.
+    """
     form = ChangePasswordForm()
     if form.validate_on_submit():
         if current_user.verify_password(form.password_old.data):

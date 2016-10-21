@@ -31,6 +31,10 @@ class User(UserMixin, db.Model):
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
     def __init__(self, **kwargs):
+        """
+        Creates user. If user email is the same address stated at
+        'ADMIN' variable, user gains administer rigths.
+        """
         super(User, self).__init__(**kwargs)
         if self.role is None:
             if self.email == current_app.config['ADMIN']:
@@ -46,6 +50,9 @@ class User(UserMixin, db.Model):
 
     @staticmethod
     def generate_fake(count=100):
+        """
+        Generates fake users, 100 by default.
+        """
         from sqlalchemy.exc import IntegrityError
         from random import seed
         import forgery_py
@@ -144,6 +151,10 @@ class User(UserMixin, db.Model):
         return self.can(Permission.ADMINISTER)
 
     def gravatar(self, size=100, default='identicon', rating='g'):
+        """
+        Uses user email hash stored in database in order to obtain gravatars.
+        Supports both http and https options.
+        """
         if request.is_secure:
             url = 'https://secure.gravatar.com/avatar'
         else:
@@ -153,7 +164,9 @@ class User(UserMixin, db.Model):
                 url=url, hash=hash, size=size, default=default, rating=rating)
 
 class AnonymousUser(AnonymousUserMixin):
-
+    """
+    Utility class that implements functions necessary for proper usage scenario.
+    """
     def can(self, permissions):
         return False
 
@@ -163,6 +176,9 @@ class AnonymousUser(AnonymousUserMixin):
 login_manager.anonymous_user = AnonymousUser
 
 class Permission:
+    """
+    Hexidecimal numbers used as masks in order to check permissions.
+    """
     COMMENT = 0x02
     WRITE_ARTICLES = 0x04
     MODERATE_COMMENTS = 0x08
@@ -178,6 +194,9 @@ class Role(db.Model):
 
     @staticmethod
     def insert_roles():
+        """
+        Method necessary to initialize roles in the database.
+        """
         roles = {
             'User' : (Permission.COMMENT, True),
             'Moderator' : (Permission.COMMENT |
@@ -217,6 +236,9 @@ class Tag(db.Model):
 
     @staticmethod
     def ordered_list():
+        """
+        Returns a list of tags sorted by quantity of related posts.
+        """
         l = []
         for tag in Tag.query.all():
             l.append((tag.name, tag.count_posts, tag.id))
@@ -247,6 +269,9 @@ class Post(db.Model):
         return self.tags.count()
 
     def includes_tag(self, tag):
+        """
+        Checks if post is published under tag.
+        """
         return self.tags.filter_by(tag_id=tag.id).first() is not None
 
     def tagify(self, tag):
@@ -262,6 +287,9 @@ class Post(db.Model):
 
     @staticmethod
     def generate_fake(count=100):
+        """
+        Generate fake posts. Users and tags are chosen by random.
+        """
         from random import seed, randint
         import forgery_py
 
@@ -279,6 +307,9 @@ class Post(db.Model):
 
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
+        """
+        Defines a list of allowed tags in user input and removes all the other
+        """
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
             'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
             'h1', 'h2', 'h3', 'p']
